@@ -2,11 +2,11 @@ import { Pool } from "pg";
 import Todo from "../models/Todo";
 
 const pool = new Pool({
-  host: "localhost",
+  host: "0.0.0.0",
   port: 5432,
   user: "todo",
   database: "todo",
-  password: "12345",
+  password: process.env.DB_PASSWORD ?? "12345",
 });
 
 pool.on("error", (err, _client) => {

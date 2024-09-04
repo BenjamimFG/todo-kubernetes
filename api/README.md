@@ -6,7 +6,7 @@ Dentro da pasta db:
 ```docker build -t todo-db:v1.0 .```
 
 ### Iniciar DB
-```docker run -e POSTGRES_PASSWORD=minha_senha_secreta --name todo-db -p 5432:5432 -d todo-db:v1.0```
+```docker run -e POSTGRES_PASSWORD=minha_senha_secreta --name todo-db --net=host -d todo-db:v1.0```
 
 ## Api
 ### Build
@@ -17,3 +17,10 @@ Dentro da pasta db:
 
 ### Rodar em modo prod
 ```npm start```
+
+### Build da imagem da API
+Na pasta API:
+```docker build -t todo-api:v1.0 .```
+
+### Iniciar api no Docker
+```docker run -e DB_PASSWORD=minha_senha_secreta --name todo-api --net=host -d todo-api:v1.0```
