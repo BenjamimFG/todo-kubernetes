@@ -1,4 +1,5 @@
 import { Pool } from "pg";
+import Todo from "../models/Todo";
 
 const pool = new Pool({
   host: "localhost",
@@ -22,6 +23,42 @@ class DatabaseService {
     client.release();
 
     return res.rows;
+  }
+
+  public async createTodo(task: string) {
+    const client = await pool.connect();
+
+    const res = await client.query<Todo>(
+      "INSERT INTO todos (task) VALUES ($1) RETURNING id, task, done;",
+      [task]
+    );
+
+    client.release();
+
+    return res.rows[0];
+  }
+
+  public async patchTodo(id: number, done: boolean) {
+    const client = await pool.connect();
+
+    const res = await client.query<Todo>(
+      "UPDATE todos SET done = $1 WHERE id = $2 RETURNING id, task, done;",
+      [done, id]
+    );
+
+    client.release();
+
+    return res.rows[0];
+  }
+
+  public async deleteTodo(id: number) {
+    const client = await pool.connect();
+
+    const res = await client.query("DELETE FROM todos WHERE id = $1;", [id]);
+
+    client.release();
+
+    return true;
   }
 }
 
