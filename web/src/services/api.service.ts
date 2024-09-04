@@ -13,33 +13,43 @@ const mockTodos: Todo[] = [
   },
 ];
 
+const baseUrl = process.env.REACT_APP_API_URL;
+
 // TODO: Implementar integração com a API
 export default class ApiService {
   public static async getTodos(): Promise<Todo[]> {
-    return new Promise((resolve, _reject) => resolve(mockTodos));
+    return fetch(`${baseUrl}/todos`)
+      .then((res: Response) => res.json())
+      .then((json) => json.data);
   }
 
   public static async createTodo(task: string): Promise<Todo> {
-    const mockId = mockTodos.length;
-
-    const mockCreatedTodo = {
-      id: mockId,
-      task,
-      done: false,
-    };
-
-    mockTodos[mockId] = mockCreatedTodo;
-
-    return new Promise((resolve, _reject) => resolve(mockTodos[mockId]));
+    return fetch(`${baseUrl}/todos/`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ task: task }),
+    })
+      .then((res) => res.json())
+      .then((json) => json.data);
   }
 
   public static async patchTodo(id: number, done: boolean): Promise<Todo> {
-    return new Promise((resolve, reject) => {
-      if (!mockTodos[id]) return reject(`Todo com id ${id} não existe.`);
+    return fetch(`${baseUrl}/todos/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ done: done }),
+    })
+      .then((res) => res.json())
+      .then((json) => json.data);
+  }
 
-      mockTodos[id].done = done;
-
-      return resolve(mockTodos[id]);
+  public static async deleteTodo(id: number) {
+    return fetch(`${baseUrl}/todos/${id}`, {
+      method: "DELETE",
     });
   }
 }

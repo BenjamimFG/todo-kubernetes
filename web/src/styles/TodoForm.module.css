@@ -1,0 +1,10 @@
+.form-container {
+  margin: 2em 0;
+  display: flex;
+  flex-direction: row;
+  gap: 1em;
+}
+
+.task-input {
+  flex: 1 1 0;
+}

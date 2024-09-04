@@ -6,10 +6,13 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import Todo from "../models/Todo";
 import ApiService from "../services/api.service";
-import { Checkbox, styled } from "@mui/material";
+import { Checkbox, IconButton, styled } from "@mui/material";
+
+import styles from "../styles/TodoList.module.css";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -60,7 +63,18 @@ export default class TodoList extends Component {
       this.loadTodos();
     } catch (e) {
       alert("Erro ao atualizar todo");
-      console.error("Erro ao atuzliar todo", e);
+      console.error("Erro ao atualizar todo", e);
+    }
+  }
+
+  async deleteTodo(id: number) {
+    try {
+      await ApiService.deleteTodo(id);
+
+      this.loadTodos();
+    } catch (e) {
+      alert("Erro ao deletar todo");
+      console.error("Erro ao deletar todo", e);
     }
   }
 
@@ -81,20 +95,31 @@ export default class TodoList extends Component {
               <StyledTableCell align="center" width={"10%"}>
                 Feito
               </StyledTableCell>
-              <StyledTableCell align="left" width={"90%"}>
+              <StyledTableCell align="left" width={"80%"}>
                 Tarefa
+              </StyledTableCell>
+              <StyledTableCell align="center" width={"10%"}>
+                Ações
               </StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {this.state.loading && (
               <TableRow>
-                <TableCell colSpan={2} align="center">
+                <TableCell colSpan={3} align="center">
                   Carregando...
                 </TableCell>
               </TableRow>
             )}
+            {!this.state.loading && this.state.todos.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={3} align="center">
+                  Nenhum todo registrado
+                </TableCell>
+              </TableRow>
+            )}
             {!this.state.loading &&
+              this.state.todos.length > 0 &&
               this.state.todos.map((todo) => (
                 <StyledTableRow key={todo.id}>
                   <StyledTableCell align="center">
@@ -103,7 +128,20 @@ export default class TodoList extends Component {
                       onClick={() => this.updateTodo(todo.id, !todo.done)}
                     />
                   </StyledTableCell>
-                  <StyledTableCell align="left">{todo.task}</StyledTableCell>
+                  <StyledTableCell
+                    align="left"
+                    className={todo.done ? styles["striked-text"] : ""}
+                  >
+                    {todo.task}
+                  </StyledTableCell>
+                  <StyledTableCell align="center">
+                    <IconButton
+                      aria-label="delete"
+                      onClick={() => this.deleteTodo(todo.id)}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </StyledTableCell>
                 </StyledTableRow>
               ))}
           </TableBody>
