@@ -1,4 +1,3 @@
-import { randomInt } from "crypto";
 import Todo from "../models/Todo";
 
 const mockTodos: Todo[] = [
@@ -8,7 +7,7 @@ const mockTodos: Todo[] = [
     done: false,
   },
   {
-    id: 0,
+    id: 1,
     task: "Polir o carro",
     done: false,
   },
@@ -21,24 +20,26 @@ export default class ApiService {
   }
 
   public static async createTodo(task: string): Promise<Todo> {
+    const mockId = mockTodos.length;
+
     const mockCreatedTodo = {
-      id: randomInt(2, 999),
+      id: mockId,
       task,
       done: false,
     };
 
-    return new Promise((resolve, _reject) => resolve(mockCreatedTodo));
+    mockTodos[mockId] = mockCreatedTodo;
+
+    return new Promise((resolve, _reject) => resolve(mockTodos[mockId]));
   }
 
-  public static async patchTodo(
-    id: number,
-    done: boolean
-  ): Promise<Omit<Todo, "task">> {
-    const mockPatchedTodo = {
-      id,
-      done,
-    };
+  public static async patchTodo(id: number, done: boolean): Promise<Todo> {
+    return new Promise((resolve, reject) => {
+      if (!mockTodos[id]) return reject(`Todo com id ${id} não existe.`);
 
-    return new Promise((resolve, _reject) => resolve(mockPatchedTodo));
+      mockTodos[id].done = done;
+
+      return resolve(mockTodos[id]);
+    });
   }
 }
