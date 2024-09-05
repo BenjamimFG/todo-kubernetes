@@ -1,14 +1,14 @@
-import { Component, ReactNode } from "react";
+import { useState } from "react";
 import TodoForm from "./components/TodoForm";
 import TodoList from "./components/TodoList";
 
-export default class TodoApp extends Component {
-  render(): ReactNode {
-    return (
-      <main>
-        <TodoForm />
-        <TodoList />
-      </main>
-    );
-  }
+export default function TodoApp() {
+  const [fetchTodos, setFetchTodos] = useState<boolean>(true);
+
+  return (
+    <main>
+      <TodoForm setFetchTodos={setFetchTodos} />
+      <TodoList fetchTodos={fetchTodos} setFetchTodos={setFetchTodos} />
+    </main>
+  );
 }

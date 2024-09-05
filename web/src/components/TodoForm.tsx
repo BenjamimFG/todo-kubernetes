@@ -1,48 +1,49 @@
 import { Button, TextField } from "@mui/material";
-import { Component, ReactNode } from "react";
+import { Dispatch, useState } from "react";
 
 import styles from "../styles/TodoForm.module.css";
 import ApiService from "../services/api.service";
 
-export default class TodoForm extends Component {
-  state = {
-    task: "",
-  };
+type Props = {
+  setFetchTodos: Dispatch<boolean>;
+};
 
-  async createTodo() {
-    if (this.state.task.length === 0) return;
+export default function TodoForm({ setFetchTodos }: Props) {
+  const [task, setTask] = useState("");
+
+  const createTodo = async () => {
+    if (task.length === 0) return;
 
     try {
-      await ApiService.createTodo(this.state.task);
+      await ApiService.createTodo(task);
 
-      this.setState({ task: "" });
+      setTask("");
 
-      // carregar todos
+      setFetchTodos(true);
     } catch (e) {
       alert("Erro ao criar Todo");
       console.log("Erro ao criar Todo");
     }
-  }
+  };
 
-  render(): ReactNode {
-    return (
-      <div className={styles["form-container"]}>
-        <TextField
-          id="outlined-basic"
-          label="Tarefa"
-          variant="outlined"
-          className={styles["task-input"]}
-          value={this.state.task}
-          onChange={(e) => this.setState({ task: e.target.value })}
-        />
-        <Button
-          variant="contained"
-          onClick={() => this.createTodo()}
-          disabled={this.state.task.length === 0}
-        >
-          Criar Todo
-        </Button>
-      </div>
-    );
-  }
+  return (
+    <div className={styles["form-container"]}>
+      <TextField
+        id="outlined-basic"
+        label="Tarefa"
+        variant="outlined"
+        className={styles["task-input"]}
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+        slotProps={{ htmlInput: { maxLength: 512 } }}
+      />
+      <Button
+        variant="contained"
+        onClick={() => createTodo()}
+        disabled={task.length === 0}
+      >
+        Criar Todo
+      </Button>
+    </div>
+  );
 }
