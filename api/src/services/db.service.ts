@@ -2,7 +2,7 @@ import { Pool } from "pg";
 import Todo from "../models/Todo";
 
 const pool = new Pool({
-  host: "0.0.0.0",
+  host: process.env.DB_HOST ?? "0.0.0.0",
   port: 5432,
   user: "todo",
   database: "todo",
