@@ -3,7 +3,7 @@
 A simple TO-DO application used for learning about container orchestration, deploy and scaling in Kubernetes.
 
 ## 0. System Design
-[System design image](system_design_diagram.png)
+![System design image](system_design_diagram.png)
 
 ## 1. Build the Docker images
 ```bash
