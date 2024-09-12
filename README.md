@@ -1,6 +1,6 @@
-# Deploy kubernetes
+# TO-DO Kubernetes
 
-A simple TO-DO application used for learning about container orchestration, deploy and scaling in Kubernetes.
+A simple TO-DO application built to learn about container orchestration, deployment and scaling in Kubernetes.
 
 ## 0. System Design
 ![System design image](system_design_diagram.png)
